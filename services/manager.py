@@ -19,8 +19,30 @@ class ProjectManager:
     # LOAD FROM JSON
     # -------------------------
     def load_users(self):
+        """
+        Load users, projects, and tasks from JSON storage.
+        """
         for u in self.data.get("users", []):
             user = User(u["name"], u["email"])
+
+            # Load projects
+            for p in u.get("projects", []):
+                project = Project(
+                    p["title"],
+                    p.get("description", "")
+                )
+
+                # Load tasks
+                for t in p.get("tasks", []):
+                    task = Task(t["title"])
+
+                    if t.get("status") == "Completed":
+                        task.mark_complete()
+
+                    project.add_task(task)
+
+                user.add_project(project)
+
             self.users.append(user)
 
     # -------------------------
@@ -35,17 +57,17 @@ class ProjectManager:
                 "email": user.email,
                 "projects": [
                     {
-                        "title": p.title,
-                        "description": p.description,
+                        "title": project.title,
+                        "description": project.description,
                         "tasks": [
                             {
-                                "title": t.title,
-                                "status": t.status
+                                "title": task.title,
+                                "status": task.status
                             }
-                            for t in p.tasks
+                            for task in project.tasks
                         ]
                     }
-                    for p in user.projects
+                    for project in user.projects
                 ]
             })
 
@@ -80,6 +102,7 @@ class ProjectManager:
 
         project = Project(title, description)
         user.add_project(project)
+
         self.save()
         return project
 
@@ -95,8 +118,10 @@ class ProjectManager:
         for project in user.projects:
             if project.title == project_title:
                 task = Task(task_title)
+
                 project.add_task(task)
                 self.save()
+
                 return task
 
         return None
@@ -112,6 +137,7 @@ class ProjectManager:
                 for task in project.tasks:
                     if task.title == task_title:
                         task.mark_complete()
+
                         self.save()
                         return True
 
