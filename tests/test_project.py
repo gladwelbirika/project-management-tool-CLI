@@ -1,4 +1,10 @@
+import sys
+import os
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+
 from models.project import Project
+
 
 p1 = Project("CLI Tool", "Build a CLI app")
 
