@@ -1,16 +1,8 @@
-import sys
-import os
-
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-
 from models.project import Project
 
+def test_project_creation():
+    project = Project("CLI Tool", "Test project")
 
-p1 = Project("CLI Tool", "Build a CLI app")
-
-print(p1)
-
-p1.add_task("Implement CLI")
-p1.add_task("Add tests")
-
-print(p1.get_tasks())
+    assert project.title == "CLI Tool"
+    assert project.description == "Test project"
+    assert len(project.tasks) == 0

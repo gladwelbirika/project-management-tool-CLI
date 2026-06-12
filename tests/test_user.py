@@ -1,16 +1,16 @@
-import sys
-import os
-
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-
 from models.user import User
 
+def test_user_creation():
+    user = User("Alex", "alex@email.com")
 
-u1 = User("Alex", "alex@email.com")
-u2 = User("John", "john@email.com")
+    assert user.name == "Alex"
+    assert user.email == "alex@email.com"
+    assert len(user.projects) == 0
 
-print(u1)
-print(u2)
 
-u1.add_project("CLI Tool")
-print("Projects:", u1.get_projects())
+def test_add_project():
+    user = User("Alex", "alex@email.com")
+
+    user.add_project("CLI Tool")
+
+    assert len(user.projects) == 1
